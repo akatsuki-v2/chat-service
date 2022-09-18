@@ -4,7 +4,7 @@ from enum import Enum
 
 
 class ServiceError(str, Enum):
-    CHAT_CONFIGS_CANNOT_CREATE = 'chat_configs.cannot_create'
-    CHAT_CONFIGS_CANNOT_UPDATE = 'chat_configs.cannot_update'
-    CHAT_CONFIGS_CANNOT_DELETE = 'chat_configs.cannot_delete'
-    CHAT_CONFIGS_NOT_FOUND = 'chat_configs.not_found'
+    CHATS_CANNOT_CREATE = 'chats.cannot_create'
+    CHATS_CANNOT_UPDATE = 'chats.cannot_update'
+    CHATS_CANNOT_DELETE = 'chats.cannot_delete'
+    CHATS_NOT_FOUND = 'chats.not_found'

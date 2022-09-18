@@ -4,7 +4,8 @@ from app.models import BaseModel
 from app.models import Status
 
 
-class ChatConfig(BaseModel):
+class Chat(BaseModel):
+    chat_id: int
     name: str
     topic: str
     read_privileges: int
@@ -17,7 +18,7 @@ class ChatConfig(BaseModel):
     created_by: int
 
 
-class ChatConfigInput(BaseModel):
+class ChatInput(BaseModel):
     name: str
     topic: str
     read_privileges: int
@@ -26,7 +27,7 @@ class ChatConfigInput(BaseModel):
     created_by: int
 
 
-class ChatConfigUpdate(BaseModel):
+class ChatUpdate(BaseModel):
     name: str | None
     topic: str | None
     read_privileges: int | None

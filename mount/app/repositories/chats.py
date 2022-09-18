@@ -5,9 +5,9 @@ from app.common.context import Context
 from app.models import Status
 
 
-class ChatConfigsRepo:
+class ChatsRepo:
     READ_PARAMS = """\
-        config_id, name, topic, read_privileges, write_privileges, auto_join,
+        chat_id, name, topic, read_privileges, write_privileges, auto_join,
         status, updated_at, created_at, created_by
     """
 
@@ -24,7 +24,7 @@ class ChatConfigsRepo:
                      status: Status = Status.ACTIVE,
                      ) -> Mapping[str, Any]:
         query = f"""\
-            INSERT INTO chat_configs (name, topic, read_privileges,
+            INSERT INTO chats (name, topic, read_privileges,
                                       write_privileges, auto_join, status,
                                       created_by)
                  VALUES (:name, :topic, :read_privileges, :write_privileges,
@@ -40,11 +40,11 @@ class ChatConfigsRepo:
             "status": status,
             "created_by": created_by,
         }
-        chat_config = await self.ctx.db.fetch_one(query, params)
-        assert chat_config is not None
-        return chat_config
+        chat = await self.ctx.db.fetch_one(query, params)
+        assert chat is not None
+        return chat
 
-    async def fetch_one(self, config_id: int | None = None,
+    async def fetch_one(self, chat_id: int | None = None,
                         name: str | None = None,
                         topic: str | None = None,
                         read_privileges: int | None = None,
@@ -54,8 +54,8 @@ class ChatConfigsRepo:
                         created_by: int | None = None) -> Mapping[str, Any] | None:
         query = f"""\
             SELECT {self.READ_PARAMS}
-              FROM chat_configs
-             WHERE config_id = COALESCE(:config_id, config_id)
+              FROM chats
+             WHERE chat_id = COALESCE(:chat_id, chat_id)
                AND name = COALESCE(:name, name)
                AND topic = COALESCE(:topic, topic)
                AND read_privileges = COALESCE(:read_privileges, read_privileges)
@@ -65,7 +65,7 @@ class ChatConfigsRepo:
                AND created_by = COALESCE(:created_by, created_by)
             """
         params = {
-            "config_id": config_id,
+            "chat_id": chat_id,
             "name": name,
             "topic": topic,
             "read_privileges": read_privileges,
@@ -74,8 +74,8 @@ class ChatConfigsRepo:
             "status": status,
             "created_by": created_by,
         }
-        chat_config = await self.ctx.db.fetch_one(query, params)
-        return chat_config
+        chat = await self.ctx.db.fetch_one(query, params)
+        return chat
 
     async def fetch_all(self, name: str | None = None,
                         topic: str | None = None,
@@ -86,7 +86,7 @@ class ChatConfigsRepo:
                         created_by: int | None = None) -> list[Mapping[str, Any]]:
         query = f"""\
             SELECT {self.READ_PARAMS}
-              FROM chat_configs
+              FROM chats
              WHERE name = COALESCE(:name, name)
                AND topic = COALESCE(:topic, topic)
                AND read_privileges = COALESCE(:read_privileges, read_privileges)
@@ -104,10 +104,10 @@ class ChatConfigsRepo:
             "status": status,
             "created_by": created_by,
         }
-        chat_configs = await self.ctx.db.fetch_all(query, params)
-        return chat_configs
+        chats = await self.ctx.db.fetch_all(query, params)
+        return chats
 
-    async def partial_update(self, config_id: int,
+    async def partial_update(self, chat_id: int,
                              name: str | None = None,
                              topic: str | None = None,
                              read_privileges: int | None = None,
@@ -115,7 +115,7 @@ class ChatConfigsRepo:
                              auto_join: bool | None = None,
                              status: Status | None = None) -> Mapping[str, Any] | None:
         query = f"""\
-            UPDATE chat_configs
+            UPDATE chats
                SET name = COALESCE(:name, name),
                    topic = COALESCE(:topic, topic),
                    read_privileges = COALESCE(:read_privileges, read_privileges),
@@ -123,11 +123,11 @@ class ChatConfigsRepo:
                    auto_join = COALESCE(:auto_join, auto_join),
                    status = COALESCE(:status, status),
                    updated_at = CURRENT_TIMESTAMP
-             WHERE config_id = :config_id
+             WHERE chat_id = :chat_id
          RETURNING {self.READ_PARAMS}
                 """
         params = {
-            "config_id": config_id,
+            "chat_id": chat_id,
             "name": name,
             "topic": topic,
             "read_privileges": read_privileges,
@@ -135,21 +135,21 @@ class ChatConfigsRepo:
             "auto_join": auto_join,
             "status": status,
         }
-        chat_config = await self.ctx.db.fetch_one(query, params)
-        return chat_config
+        chat = await self.ctx.db.fetch_one(query, params)
+        return chat
 
-    async def delete(self, config_id: int) -> Mapping[str, Any] | None:
+    async def delete(self, chat_id: int) -> Mapping[str, Any] | None:
         query = f"""\
-            UPDATE chat_configs
+            UPDATE chats
                SET status = :deleted_status,
                    updated_at = CURRENT_TIMESTAMP
-             WHERE config_id = :config_id
+             WHERE chat_id = :chat_id
                AND status != :deleted_status
          RETURNING {self.READ_PARAMS}
         """
         params = {
-            "config_id": config_id,
+            "chat_id": chat_id,
             "deleted_status": Status.DELETED,
         }
-        chat_config = await self.ctx.db.fetch_one(query, params)
-        return chat_config
+        chat = await self.ctx.db.fetch_one(query, params)
+        return chat

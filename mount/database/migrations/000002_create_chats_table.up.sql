@@ -1,5 +1,5 @@
-CREATE TABLE chat_configs (
-    config_id SERIAL NOT NULL PRIMARY KEY,
+CREATE TABLE chats (
+    chat_id SERIAL NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
     topic TEXT NOT NULL,
     read_privileges INT NOT NULL,
@@ -11,4 +11,4 @@ CREATE TABLE chat_configs (
     created_by INT NOT NULL
 );
 
-COMMENT ON COLUMN chat_configs.created_by IS 'reference to accounts.id';
+COMMENT ON COLUMN chats.created_by IS 'reference to accounts.id';
