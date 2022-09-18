@@ -47,7 +47,7 @@ async def get_chat_configs(status: Status | None = Status.ACTIVE,
     if isinstance(data, ServiceError):
         return responses.failure(data, "Failed to get chat configs")
 
-    resp = [ChatConfig.from_mapping(acc) for acc in data]
+    resp = [ChatConfig.from_mapping(rec) for rec in data]
     return responses.success(resp)
 
 
