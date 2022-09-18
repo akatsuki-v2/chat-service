@@ -141,7 +141,7 @@ class ChatConfigsRepo:
     async def delete(self, config_id: int) -> Mapping[str, Any] | None:
         query = f"""\
             UPDATE chat_configs
-               SET status = 'deleted',
+               SET status = :deleted_status,
                    updated_at = CURRENT_TIMESTAMP
              WHERE config_id = :config_id
                AND status != :deleted_status
