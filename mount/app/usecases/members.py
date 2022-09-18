@@ -6,13 +6,13 @@ from app.common.errors import ServiceError
 from app.repositories.members import MembersRepo
 
 
-async def create(ctx: Context,
-                 chat_id: int,
-                 session_id: UUID,
-                 account_id: int,
-                 username: str,
-                 privileges: int,
-                 ) -> dict[str, Any] | ServiceError:
+async def join_chat(ctx: Context,
+                    chat_id: int,
+                    session_id: UUID,
+                    account_id: int,
+                    username: str,
+                    privileges: int,
+                    ) -> dict[str, Any] | ServiceError:
     repo = MembersRepo(ctx)
 
     member = await repo.create(chat_id, session_id, account_id, username,
@@ -56,7 +56,7 @@ async def partial_update(ctx: Context,
     return member
 
 
-async def delete(ctx: Context, chat_id: int, session_id: UUID) -> dict[str, Any] | ServiceError:
+async def leave_chat(ctx: Context, chat_id: int, session_id: UUID) -> dict[str, Any] | ServiceError:
     repo = MembersRepo(ctx)
 
     member = await repo.delete(chat_id, session_id)

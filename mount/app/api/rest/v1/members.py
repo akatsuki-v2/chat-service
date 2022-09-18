@@ -15,9 +15,9 @@ router = APIRouter()
 
 # https://osuakatsuki.atlassian.net/browse/V2-86
 @router.post("/v1/chats/{chat_id}/members", response_model=Success[Member])
-async def add_member(chat_id: int, args: MemberInput,
-                     ctx: RequestContext = Depends()):
-    data = await members.create(ctx, chat_id, **args.dict())
+async def join_chat(chat_id: int, args: MemberInput,
+                    ctx: RequestContext = Depends()):
+    data = await members.join_chat(ctx, chat_id, **args.dict())
     if isinstance(data, ServiceError):
         return responses.failure(data, "Failed to add member")
 
@@ -28,9 +28,9 @@ async def add_member(chat_id: int, args: MemberInput,
 # https://osuakatsuki.atlassian.net/browse/V2-87
 @router.delete("/v1/chats/{chat_id}/members/{session_id}",
                response_model=Success[Member])
-async def remove_member(chat_id: int, session_id: UUID,
-                        ctx: RequestContext = Depends()):
-    data = await members.delete(ctx, chat_id, session_id)
+async def leave_chat(chat_id: int, session_id: UUID,
+                     ctx: RequestContext = Depends()):
+    data = await members.leave_chat(ctx, chat_id, session_id)
     if isinstance(data, ServiceError):
         return responses.failure(data, "Failed to remove member")
 

@@ -2,7 +2,6 @@ from datetime import datetime
 from uuid import UUID
 
 from app.models import BaseModel
-# from app.models import Status
 
 
 class Member(BaseModel):
