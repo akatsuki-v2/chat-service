@@ -113,7 +113,7 @@ class ChatConfigsRepo:
                              read_privileges: int | None = None,
                              write_privileges: int | None = None,
                              auto_join: bool | None = None,
-                             status: str | None = None) -> Mapping[str, Any] | None:
+                             status: Status | None = None) -> Mapping[str, Any] | None:
         query = f"""\
             UPDATE chat_configs
                SET name = COALESCE(:name, name),

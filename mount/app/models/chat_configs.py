@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from app.models import BaseModel
+from app.models import Status
 
 
 class ChatConfig(BaseModel):
@@ -10,7 +11,7 @@ class ChatConfig(BaseModel):
     write_privileges: int
     auto_join: bool
 
-    status: str
+    status: Status
     updated_at: datetime
     created_at: datetime
     created_by: int
@@ -32,4 +33,4 @@ class ChatConfigUpdate(BaseModel):
     write_privileges: int | None
     auto_join: bool | None
 
-    status: str | None
+    status: Status | None

@@ -7,6 +7,7 @@ from typing import Any
 from app.common import logging
 from app.common.context import Context
 from app.common.errors import ServiceError
+from app.models import Status
 from app.repositories.chat_configs import ChatConfigsRepo
 
 
@@ -52,7 +53,7 @@ async def fetch_all(ctx: Context,
                     read_privileges: int | None = None,
                     write_privileges: int | None = None,
                     auto_join: bool | None = None,
-                    status: str | None = None,
+                    status: Status | None = None,
                     created_by: int | None = None) -> list[Mapping[str, Any]]:
     repo = ChatConfigsRepo(ctx)
 
@@ -72,7 +73,7 @@ async def partial_update(ctx: Context,
                          read_privileges: int | None = None,
                          write_privileges: int | None = None,
                          auto_join: bool | None = None,
-                         status: str | None = None,
+                         status: Status | None = None,
                          ) -> Mapping[str, Any] | ServiceError:
     repo = ChatConfigsRepo(ctx)
 
