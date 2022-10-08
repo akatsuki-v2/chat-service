@@ -51,7 +51,6 @@ class ChatsRepo:
         assert chat is not None
         return chat
 
-
     async def fetch_one(self, chat_id: int | None = None,
                         name: str | None = None,
                         topic: str | None = None,
