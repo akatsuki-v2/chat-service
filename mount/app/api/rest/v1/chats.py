@@ -39,10 +39,18 @@ async def get_chat(chat_id: int, ctx: RequestContext = Depends()):
 
 # https://osuakatsuki.atlassian.net/browse/V2-83
 @router.get("/v1/chats", response_model=Success[list[Chat]])
-async def get_chats(status: Status | None = Status.ACTIVE,
+async def get_chats(name: str | None = None,
+                    topic: str | None = None,
+                    read_privileges: int | None = None,
+                    write_privileges: int | None = None,
+                    auto_join: bool | None = None,
+                    status: Status | None = None,
                     created_by: int | None = None,
                     ctx: RequestContext = Depends()):
-    data = await chats.fetch_all(ctx, status=status,
+    data = await chats.fetch_all(ctx, name=name, topic=topic,
+                                 read_privileges=read_privileges,
+                                 write_privileges=write_privileges,
+                                 auto_join=auto_join, status=status,
                                  created_by=created_by)
     if isinstance(data, ServiceError):
         return responses.failure(data, "Failed to get chats")
