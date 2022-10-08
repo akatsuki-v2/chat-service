@@ -1,12 +1,12 @@
 from datetime import datetime
-from typing import Any
+from typing import Any, Literal
 from uuid import UUID
 
 from app.common import json as jsonu
 from app.common.context import Context
 
 
-def create_member_key(chat_id: int, session_id: UUID) -> str:
+def create_member_key(chat_id: int, session_id: Literal['*'] | UUID) -> str:
     return f"chats:{chat_id}:members:{session_id}"
 
 
