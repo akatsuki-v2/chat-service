@@ -29,8 +29,7 @@ class ChatsRepo:
                                       created_by)
                  VALUES (:name, :topic, :read_privileges, :write_privileges,
                          :auto_join, :status, :created_by)
-              RETURNING {self.READ_PARAMS}
-            """
+        """
         params = {
             "name": name,
             "topic": topic,
@@ -40,9 +39,18 @@ class ChatsRepo:
             "status": status,
             "created_by": created_by,
         }
+        row_id = await self.ctx.db.execute(query, params)
+
+        query = f"""\
+            SELECT {self.READ_PARAMS}
+              FROM chats
+             WHERE chat_id = :chat_id
+        """
+        params = {"chat_id": row_id}
         chat = await self.ctx.db.fetch_one(query, params)
         assert chat is not None
         return chat
+
 
     async def fetch_one(self, chat_id: int | None = None,
                         name: str | None = None,
@@ -63,7 +71,7 @@ class ChatsRepo:
                AND auto_join = COALESCE(:auto_join, auto_join)
                AND status = COALESCE(:status, status)
                AND created_by = COALESCE(:created_by, created_by)
-            """
+        """
         params = {
             "chat_id": chat_id,
             "name": name,
@@ -94,7 +102,7 @@ class ChatsRepo:
                AND auto_join = COALESCE(:auto_join, auto_join)
                AND status = COALESCE(:status, status)
                AND created_by = COALESCE(:created_by, created_by)
-            """
+        """
         params = {
             "name": name,
             "topic": topic,
@@ -124,8 +132,7 @@ class ChatsRepo:
                    status = COALESCE(:status, status),
                    updated_at = CURRENT_TIMESTAMP
              WHERE chat_id = :chat_id
-         RETURNING {self.READ_PARAMS}
-                """
+        """
         params = {
             "chat_id": chat_id,
             "name": name,
@@ -135,7 +142,16 @@ class ChatsRepo:
             "auto_join": auto_join,
             "status": status,
         }
+        await self.ctx.db.execute(query, params)
+
+        query = f"""\
+            SELECT {self.READ_PARAMS}
+              FROM chats
+             WHERE chat_id = :chat_id
+        """
+        params = {"chat_id": chat_id}
         chat = await self.ctx.db.fetch_one(query, params)
+        assert chat is not None
         return chat
 
     async def delete(self, chat_id: int) -> Mapping[str, Any] | None:
@@ -145,11 +161,19 @@ class ChatsRepo:
                    updated_at = CURRENT_TIMESTAMP
              WHERE chat_id = :chat_id
                AND status != :deleted_status
-         RETURNING {self.READ_PARAMS}
         """
         params = {
             "chat_id": chat_id,
             "deleted_status": Status.DELETED,
         }
+        await self.ctx.db.execute(query, params)
+
+        query = f"""\
+            SELECT {self.READ_PARAMS}
+              FROM chats
+             WHERE chat_id = :chat_id
+        """
+        params = {"chat_id": chat_id}
         chat = await self.ctx.db.fetch_one(query, params)
+        assert chat is not None
         return chat
