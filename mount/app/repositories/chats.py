@@ -53,36 +53,13 @@ class ChatsRepo:
         assert chat is not None
         return chat
 
-    async def fetch_one(self, chat_id: int | None = None,
-                        name: str | None = None,
-                        topic: str | None = None,
-                        read_privileges: int | None = None,
-                        write_privileges: int | None = None,
-                        auto_join: bool | None = None,
-                        status: Status | None = Status.ACTIVE,
-                        created_by: int | None = None) -> Mapping[str, Any] | None:
+    async def fetch_one(self, chat_id: int) -> Mapping[str, Any] | None:
         query = f"""\
             SELECT {self.READ_PARAMS}
               FROM chats
-             WHERE chat_id = COALESCE(:chat_id, chat_id)
-               AND name = COALESCE(:name, name)
-               AND topic = COALESCE(:topic, topic)
-               AND read_privileges = COALESCE(:read_privileges, read_privileges)
-               AND write_privileges = COALESCE(:write_privileges, write_privileges)
-               AND auto_join = COALESCE(:auto_join, auto_join)
-               AND status = COALESCE(:status, status)
-               AND created_by = COALESCE(:created_by, created_by)
+             WHERE chat_id = :chat_id
         """
-        params = {
-            "chat_id": chat_id,
-            "name": name,
-            "topic": topic,
-            "read_privileges": read_privileges,
-            "write_privileges": write_privileges,
-            "auto_join": auto_join,
-            "status": status,
-            "created_by": created_by,
-        }
+        params = {"chat_id": chat_id}
         chat = await self.ctx.db.fetch_one(query, params)
         return chat
 

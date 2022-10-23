@@ -18,7 +18,11 @@ router = APIRouter()
 # https://osuakatsuki.atlassian.net/browse/V2-81
 @router.post("/v1/chats", response_model=Success[Chat])
 async def create_chat(args: ChatInput, ctx: RequestContext = Depends()):
-    data = await chats.create(ctx, **args.dict())
+    data = await chats.create(ctx, name=args.name, topic=args.topic,
+                              read_privileges=args.read_privileges,
+                              write_privileges=args.write_privileges,
+                              auto_join=args.auto_join, instance=args.instance,
+                              created_by=args.created_by)
     if isinstance(data, ServiceError):
         return responses.failure(data, "Failed to create chat")
 

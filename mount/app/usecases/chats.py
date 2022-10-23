@@ -4,11 +4,11 @@ import traceback
 from collections.abc import Mapping
 from typing import Any
 
-from app.common import logging
 from app.common.context import Context
 from app.common.errors import ServiceError
 from app.models import Status
 from app.repositories.chats import ChatsRepo
+from shared_modules import logger
 
 
 async def create(ctx: Context,
@@ -29,8 +29,8 @@ async def create(ctx: Context,
                                  instance, auto_join, created_by)
     except Exception as exc:
         await transaction.rollback()
-        logging.error("Unable to create chat:", error=exc)
-        logging.error("Stack trace: ", error=traceback.format_exc())
+        logger.error("Unable to create chat:", error=exc)
+        logger.error("Stack trace: ", error=traceback.format_exc())
         return ServiceError.CHATS_CANNOT_CREATE
     else:
         await transaction.commit()
@@ -92,8 +92,8 @@ async def partial_update(ctx: Context,
 
     except Exception as exc:
         await transaction.rollback()
-        logging.error("Unable to update chat:", error=exc)
-        logging.error("Stack trace: ", error=traceback.format_exc())
+        logger.error("Unable to update chat:", error=exc)
+        logger.error("Stack trace: ", error=traceback.format_exc())
         return ServiceError.CHATS_CANNOT_UPDATE
     else:
         await transaction.commit()
@@ -114,8 +114,8 @@ async def delete(ctx: Context, chat_id: int) -> Mapping[str, Any] | ServiceError
 
     except Exception as exc:
         await transaction.rollback()
-        logging.error("Unable to delete chat:", error=exc)
-        logging.error("Stack trace: ", error=traceback.format_exc())
+        logger.error("Unable to delete chat:", error=exc)
+        logger.error("Stack trace: ", error=traceback.format_exc())
         return ServiceError.CHATS_CANNOT_DELETE
     else:
         await transaction.commit()
