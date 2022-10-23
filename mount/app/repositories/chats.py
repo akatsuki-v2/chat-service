@@ -7,8 +7,8 @@ from app.models import Status
 
 class ChatsRepo:
     READ_PARAMS = """\
-        chat_id, name, topic, read_privileges, write_privileges, auto_join,
-        status, updated_at, created_at, created_by
+        chat_id, name, topic, read_privileges, write_privileges, instance,
+        auto_join, status, updated_at, created_at, created_by
     """
 
     def __init__(self, ctx: Context) -> None:
@@ -20,15 +20,16 @@ class ChatsRepo:
                      read_privileges: int,
                      write_privileges: int,
                      auto_join: bool,
+                     instance: bool,
                      created_by: int,
                      status: Status = Status.ACTIVE,
                      ) -> Mapping[str, Any]:
         query = f"""\
             INSERT INTO chats (name, topic, read_privileges,
-                                      write_privileges, auto_join, status,
-                                      created_by)
+                                      write_privileges, auto_join, instance,
+                                      status, created_by)
                  VALUES (:name, :topic, :read_privileges, :write_privileges,
-                         :auto_join, :status, :created_by)
+                         :auto_join, :instance, :status, :created_by)
         """
         params = {
             "name": name,
@@ -36,6 +37,7 @@ class ChatsRepo:
             "read_privileges": read_privileges,
             "write_privileges": write_privileges,
             "auto_join": auto_join,
+            "instance": instance,
             "status": status,
             "created_by": created_by,
         }
@@ -89,6 +91,7 @@ class ChatsRepo:
                         read_privileges: int | None = None,
                         write_privileges: int | None = None,
                         auto_join: bool | None = None,
+                        instance: bool | None = None,
                         status: Status | None = Status.ACTIVE,
                         created_by: int | None = None) -> list[Mapping[str, Any]]:
         query = f"""\
@@ -99,6 +102,7 @@ class ChatsRepo:
                AND read_privileges = COALESCE(:read_privileges, read_privileges)
                AND write_privileges = COALESCE(:write_privileges, write_privileges)
                AND auto_join = COALESCE(:auto_join, auto_join)
+               AND instance = COALESCE(:instance, instance)
                AND status = COALESCE(:status, status)
                AND created_by = COALESCE(:created_by, created_by)
         """
@@ -108,6 +112,7 @@ class ChatsRepo:
             "read_privileges": read_privileges,
             "write_privileges": write_privileges,
             "auto_join": auto_join,
+            "instance": instance,
             "status": status,
             "created_by": created_by,
         }

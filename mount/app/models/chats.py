@@ -11,6 +11,7 @@ class Chat(BaseModel):
     read_privileges: int
     write_privileges: int
     auto_join: bool
+    instance: bool
 
     status: Status
     updated_at: datetime
@@ -24,6 +25,7 @@ class ChatInput(BaseModel):
     read_privileges: int
     write_privileges: int
     auto_join: bool
+    instance: bool
     created_by: int
 
 

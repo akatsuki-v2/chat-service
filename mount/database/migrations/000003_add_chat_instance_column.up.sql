@@ -1,0 +1,1 @@
+ALTER TABLE chats ADD COLUMN instance BOOLEAN NOT NULL AFTER auto_join;
